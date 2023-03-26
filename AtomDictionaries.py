@@ -1,3 +1,4 @@
+# Below are atom dicts
 ftyp = {
      'Size':None, 
      'Type':'ftyp',
