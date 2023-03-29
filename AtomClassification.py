@@ -169,19 +169,92 @@ try:
         hex_pointer = sample_atom_classifier(cur_atom, hex_pointer, cur_size)
         cur_size, cur_atom = integrity_checker(hex_pointer)
 
-    #  Work on stps atom now
-        # stsd done
-        # stts code diverted to sample atom classifier
-        # stss code diverted to sample atom classifier
-        # stsc atom diverted to sample atom classifer
-        # stsz atom diverted to sample atom classifer
-        # stco atom diverted to sample atom classifer
-        # ctts atom done
-        # stsd stom done
-        # stps atom done
-        # cslg atom done
 
-    #   # The upcoming track should deal with sound track
+            #   # The upcoming track should deal with sound track
+
+    
+    while(cur_atom!="trak"):
+        hex_pointer+=cur_size*2
+        cur_size, cur_atom = integrity_checker(hex_pointer)
+        
+    #   # The upcoming track should deal with sound_track or the video_track which ever didn't occur yet
+    if(cur_atom=="trak"):  
+            print("Yoooo")
+            origin_pointer=trak_classifier(hex_pointer,cur_size)
+            print("\n","Track type (trak) Atom Details are:")
+            dprint(trak)
+            hex_pointer+=16
+    cur_size, cur_atom = integrity_checker(hex_pointer)
+    if(cur_atom=="tkhd"):  
+            hex_pointer=tkhd_classifier(hex_pointer,cur_size)
+            print("\n","Track header (tkhd) Atom Details are:")
+            dprint(tkhd)
+    cur_size, cur_atom = integrity_checker(hex_pointer)
+    while(cur_atom!="mdia"):
+        hex_pointer+=cur_size*2
+        cur_size, cur_atom = integrity_checker(hex_pointer)
+    if(cur_atom=="mdia"):       
+        origin_pointer=mdia_classifier(hex_pointer,cur_size)
+        print("\n","Movie Media (mdia) Atom Details are:")
+        dprint(mdia)
+        hex_pointer+=16
+    cur_size, cur_atom = integrity_checker(hex_pointer)
+    if(cur_atom=="mdhd"):       
+        hex_pointer=mdhd_classifier(hex_pointer,cur_size)
+        print("\n","Movie Media Header(mdhd) Atom Details are:")
+        dprint(mdhd)
+    cur_size, cur_atom = integrity_checker(hex_pointer)
+    if(cur_atom=="hdlr"):       
+        hex_pointer=hdlr_classifier(hex_pointer,cur_size)
+        print("\n","Handler Description (hdlr) Atom Details are:")
+        dprint(hdlr)
+    cur_size, cur_atom = integrity_checker(hex_pointer)
+    while(cur_atom!="minf"):
+        hex_pointer+=cur_size*2
+        cur_size, cur_atom = integrity_checker(hex_pointer)
+    if(cur_atom=="minf"):
+        original_pointer=minf_classifier(hex_pointer,cur_size)
+        print("\n","Media Information (minf) Atom Details are:")
+        dprint(minf)
+        hex_pointer+=16
+    cur_size, cur_atom = integrity_checker(hex_pointer)  
+    if(cur_atom=="smhd"):
+        hex_pointer=smhd_classifier(hex_pointer,cur_size)
+        print("\n","Sound Media Header (smhd) Atom Details are:")
+        dprint(smhd)
+    if(cur_atom=="vmhd"):
+        hex_pointer=vmhd_classifier(hex_pointer,cur_size)
+        print("\n","Video Media Header (vmhd) Atom Details are:")
+        dprint(vmhd)
+    cur_size, cur_atom = integrity_checker(hex_pointer)  
+    if(cur_atom=="dinf"):
+        original_pointer=dinf_classifier(hex_pointer,cur_size)
+        hex_pointer+=16
+        print("\n","Data information (dinf) Atom Details are:")
+        dprint(dinf)
+    cur_size, cur_atom = integrity_checker(hex_pointer)  
+    if(cur_atom=="dref"):
+        hex_pointer=dref_classifier(hex_pointer,cur_size)
+        # hex_pointer+=16
+        # Dets of dref and url atoms are printed in the classifier due to an issue:
+        # The last attribute of dref is data references which is a compilation of URL atoms
+    cur_size, cur_atom = integrity_checker(hex_pointer) 
+    if(cur_atom=="stbl"):
+        tempo=""
+        for j in range(hex_pointer,hex_pointer+8):
+            tempo+=data[j]
+        stbl['Size']=bigEnd(tempo)
+        print("\nSample Table (stbl) details:");
+        dprint(stbl)
+        hex_pointer+=16
+    cur_size,cur_atom=integrity_checker(hex_pointer)
+    while(cur_atom == 'stsd' or cur_atom=='stsc' or cur_atom == 'stts' or cur_atom == 'stss' 
+            or cur_atom == 'stsz' or cur_atom=='stco' or cur_atom=='ctts' or cur_atom=='sdtp'
+            or cur_atom == 'stps' or cur_atom=='cslg'): 
+            hex_pointer=sample_atom_classifier(cur_atom,hex_pointer,cur_size)
+            cur_size,cur_atom=integrity_checker(hex_pointer)
+            print(cur_size,cur_atom,hex_pointer)
+    print(cur_atom)
 
     #   cur_atom="stco"
     #   count=0
