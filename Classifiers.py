@@ -683,3 +683,23 @@ def sample_atom_classifier(atom, pointer, size):
         print("\ncomposition shift least greatest atom (cslg) atom details:")
         dprint(cslg)
         return pointer
+
+def udta_classifier(atom,pointer,size):
+          cur_pointer=pointer
+          udta['Size'] = size
+          tempo=""
+          for j in range(pointer+16,pointer+18):
+            tempo+=data[j]
+          udta['Version'] = tempo
+          tempo=""
+          for j in range(pointer+18,pointer+24):
+            tempo+=data[j]
+          udta['Flags'] = tempo
+          print("yoooo")
+          flag_pointer = pointer+24
+          pointer=cur_pointer+(udta['Size']*2)
+          tempo=""
+          for f in range(flag_pointer,pointer):
+            tempo+=data[f]
+          udta['User_Data_List'] = tempo
+          return pointer

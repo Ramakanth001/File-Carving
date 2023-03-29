@@ -7,7 +7,7 @@ from IntegrityChecker import integrity_checker
 from SupportFunctions import litEnd, bigEnd, hex_to_ascii, dprint
 from HexData import data
 from AtomDictionaries import ftyp, free, mdat, moov, mvhd, trak, tkhd, mdia, mdhd, hdlr, minf, smhd, vmhd, dinf, dref, url, stbl, stsd, stts, stss, stsc, stsz, stco, ctts, sdtp, stps, cslg, udta
-from Classifiers import ftyp_classifier,free_classifier,mdat_classifier,moov_classifier,mvhd_classifier,trak_classifier,tkhd_classifier,mdia_classifier,mdhd_classifier,hdlr_classifier,minf_classifier,vmhd_classifier,smhd_classifier,dinf_classifier,dref_classifier,sample_atom_classifier
+from Classifiers import ftyp_classifier,free_classifier,mdat_classifier,moov_classifier,mvhd_classifier,trak_classifier,tkhd_classifier,mdia_classifier,mdhd_classifier,hdlr_classifier,minf_classifier,vmhd_classifier,smhd_classifier,dinf_classifier,dref_classifier,sample_atom_classifier, udta_classifier
 
 # In FPRINT call DPRINT and write that into file so that data is in the foprm of dictionary in files
 myf = open('OutputSamples/output.txt', 'w')
@@ -168,6 +168,11 @@ try:
             
         hex_pointer = sample_atom_classifier(cur_atom, hex_pointer, cur_size)
         cur_size, cur_atom = integrity_checker(hex_pointer)
+    
+    if(cur_atom=='udta'):
+           hex_pointer=udta_classifier(cur_atom,hex_pointer,cur_size)
+           print("\n","User Data (udta) Atom Details are:")
+           dprint(udta)
 
 
             #   # The upcoming track should deal with sound track
@@ -256,46 +261,10 @@ try:
             print(cur_size,cur_atom,hex_pointer)
     print(cur_atom)
 
-    #   cur_atom="stco"
-    #   count=0
-    #   while(cur_atom!='udta'):
-    #     tempo=""
-    #     for i in range(moov_pointer,moov_pointer+8):
-    #       tempo+=data[i]
-    #     temp_size=bigEnd(tempo)
-    #     # print(temp_size)
-    #     tempo=""
-    #     for i in range(moov_pointer+8,moov_pointer+16):
-    #       tempo+=data[i]
-    #     temp_atom=hex_to_ascii(tempo)
-    #     cur_atom=temp_atom
-    #     # print(cur_atom)
-    #     if(cur_atom!='udta'):
-    #       moov_pointer+=(temp_size*2)
-    #       print("\nAtom Missed!!!!")
-    #       print("Atom missed :" , cur_atom,"\n", "Size is : ",temp_size)
-
-        # cur_atom = "udta"
-        # cur_pointer=moov_pointer
-        # udta['Size'] = temp_size
-        # tempo=""
-        # for j in range(moov_pointer+16,moov_pointer+18):
-        #   tempo+=data[j]
-        # udta['Version'] = tempo
-        # tempo=""
-        # for j in range(moov_pointer+18,moov_pointer+24):
-        #   tempo+=data[j]
-        # udta['Flags'] = tempo
-
-        # flag_pointer = moov_pointer+24
-        # moov_pointer=cur_pointer+(udta['Size']*2)
-        # tempo=""
-        # for f in range(flag_pointer,moov_pointer):
-        #   tempo+=data[f]
-        # udta['User_Data_List'] = tempo
-        # print("\n User Data (udta)atom  details:")
-        # dprint(udta)
-        # #udta atom done
+    if(cur_atom=='udta'):
+           hex_pointer=udta_classifier(cur_atom,hex_pointer,cur_size)
+           print("\n","User Data (udta) Atom Details are:")
+           dprint(udta)
 
     print("\n(updated size is: ", cur_size, ")\n")
     block_count += 1
