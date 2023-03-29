@@ -161,15 +161,13 @@ try:
         print("\nSample Table (stbl) details:")
         dprint(stbl)
         hex_pointer += 16
-    cnt = 0
     cur_size, cur_atom = integrity_checker(hex_pointer)
     while (cur_atom == 'stsd' or cur_atom == 'stsc' or cur_atom == 'stts' or cur_atom == 'stss'
            or cur_atom == 'stsz' or cur_atom == 'stco' or cur_atom == 'ctts' or cur_atom == 'sdtp'
            or cur_atom == 'stps' or cur_atom == 'cslg'):
-        if (cnt > 0):
-            cur_size, cur_atom = integrity_checker(hex_pointer)
-        cnt += 1
+            
         hex_pointer = sample_atom_classifier(cur_atom, hex_pointer, cur_size)
+        cur_size, cur_atom = integrity_checker(hex_pointer)
 
     #  Work on stps atom now
         # stsd done
