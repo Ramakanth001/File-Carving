@@ -1,4 +1,5 @@
 import codecs
+from HexData import data
 def litEnd(myInp):
     vals = {str(itr):itr for itr in range(10)}
     # vals['a','b','c','d','e','f'] = {10,11,12,13,14,15}
@@ -25,3 +26,7 @@ def hex_to_ascii(myInp):
 def dprint(my_dict):
   for attribute,value in my_dict.items():
     print("\'",attribute,"\' : ",value,sep="")
+
+def test(n):
+    for i in range(n):
+        print(data[i], end="")

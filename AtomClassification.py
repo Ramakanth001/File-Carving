@@ -9,62 +9,11 @@ from HexData import data
 from AtomDictionaries import ftyp, free, mdat, moov, mvhd, trak, tkhd, mdia, mdhd, hdlr, minf, smhd, vmhd, dinf, dref, url, stbl, stsd, stts, stss, stsc, stsz, stco, ctts, sdtp, stps, cslg, udta
 from Classifiers import ftyp_classifier,free_classifier,mdat_classifier,moov_classifier,mvhd_classifier,trak_classifier,tkhd_classifier,mdia_classifier,mdhd_classifier,hdlr_classifier,minf_classifier,vmhd_classifier,smhd_classifier,dinf_classifier,dref_classifier,sample_atom_classifier, udta_classifier
 
-# In FPRINT call DPRINT and write that into file so that data is in the foprm of dictionary in files
-myf = open('OutputSamples/output.txt', 'w')
-myf.write("FILE CONTENT:\n")
-# myf.write(my_file_data)
-
-block_count = 0
-file_size = 0
-block_size_H = []
-block_size_D = []
-block_type = []
-block_sub_type = []
-cur_size = 0
-temp = ""
-hex_pointer = 0
-moov_pointer = 0
-
-def initial_chunk():
-    initial_size = data[:8]
-    block_size_H.append(initial_size)
-    initial_size_dec = litEnd(initial_size)
-    block_size_D.append(initial_size_dec)
-    print(initial_size, "   |  ", initial_size_dec)
-    block_count += 1
-
-
-def atom_seeker(pointer):
-    # IMPORTANT CODE PART : (incase we need to work on atoms as per which ever is occuring next as per hex file)
-    # SEEKING TILL WE FIND A PARTICULAR ATOM
-    # Change conventions of cur_pointer and moov_pointer
-    print(data[cur_pointer+1])
-    tempo = ""
-    temp = ""
-    while (temp != "minf"):
-        temp = ""
-        tempo = ""
-        for k in range(cur_pointer, cur_pointer+8):
-            tempo += data[k]
-        print(tempo)
-        try:
-            temp = hex_to_ascii(tempo)
-            print(temp)
-        except:
-            pass
-        cur_pointer += 1
-    print(temp)
-    moov_pointer = cur_pointer-1
-    # points to 'minf' type starting we need to take it
-    # back to 4 bytes to get its size
-    moov_pointer -= 8
-    for i in range(0, 8):
-        print(data[moov_pointer+i])
-
+hex_pointer=0
+block_count=0
 try:
     cur_size, cur_atom = integrity_checker(hex_pointer)
     print(cur_size, cur_atom)
-    # while(data[hex_pointer]!=''):
     while (cur_atom == "ftyp" or cur_atom == "free" or cur_atom == "mdat"):
         if (cur_atom == "ftyp"):
             hex_pointer = ftyp_classifier(hex_pointer, cur_size)
@@ -173,18 +122,13 @@ try:
            hex_pointer=udta_classifier(cur_atom,hex_pointer,cur_size)
            print("\n","User Data (udta) Atom Details are:")
            dprint(udta)
-
-
-            #   # The upcoming track should deal with sound track
-
-    
+           #   # The upcoming track should deal with sound track
     while(cur_atom!="trak"):
         hex_pointer+=cur_size*2
         cur_size, cur_atom = integrity_checker(hex_pointer)
         
     #   # The upcoming track should deal with sound_track or the video_track which ever didn't occur yet
     if(cur_atom=="trak"):  
-            print("Yoooo")
             origin_pointer=trak_classifier(hex_pointer,cur_size)
             print("\n","Track type (trak) Atom Details are:")
             dprint(trak)
@@ -269,6 +213,7 @@ try:
     print("\n(updated size is: ", cur_size, ")\n")
     block_count += 1
     hex_pointer = cur_size*2
+    print(hex)
 except:
     print("\nSize of the file is : ", cur_size, "bytes")
     print("Number of blocks in video :", block_count, "blocks")
