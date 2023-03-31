@@ -25,7 +25,10 @@ def hex_to_ascii(myInp):
 
 def dprint(my_dict):
   for attribute,value in my_dict.items():
-    print("\'",attribute,"\' : ",value,sep="")
+      try :
+         print("\'",attribute,"\' : ",value[:1050],sep="")
+      except:
+         print("\'",attribute,"\' : ",value,sep="")
 
 def test(n):
     for i in range(n):

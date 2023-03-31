@@ -352,8 +352,8 @@ def dref_classifier(pointer, size):
     dref['Number_of_Entries'] = bigEnd(tempo)
     entry_count = dref['Number_of_Entries']
     pointer += 32
-    print("\n", "Data Reference Information (dref) Atom Details are:")
-    dprint(dref)
+    # print("\n", "Data Reference Information (dref) Atom Details are:")
+    # dprint(dref)
     print("Since we have ", entry_count, "Number of entries we are going to have",
           entry_count, "number of data references like url atom etc")
     count = 0
@@ -377,8 +377,8 @@ def dref_classifier(pointer, size):
         url['Flags'] = tempo
         pointer += 24
         count += 1
-    print("\nURL referenced data items (url) details:")
-    dprint(url)
+    # print("\nURL referenced data items (url) details:")
+    # dprint(url)
     return pointer
 
 
@@ -431,8 +431,8 @@ def sample_atom_classifier(atom, pointer, size):
         # here sample description size is size of various format types present
         # in stsd atoms - in this atom 'mp4a'. Here we have only 1 entry i.e., stsd['Number_of_entries']
         # fo all those entries re-coumputation of constituent elements has to be done
-        print("\nSample Table Description(stsd) details:")
-        dprint(stsd)
+        # print("\nSample Table Description(stsd) details:")
+        # dprint(stsd)
         return pointer
     if (atom == 'stts'):
         stts['Size'] = cur_size
@@ -456,8 +456,8 @@ def sample_atom_classifier(atom, pointer, size):
         for j in range(pointer+40, pointer+48):
             tempo += data[j]
         stts['Sample_Count'] = tempo
-        print("\nSample to Time-Table Samples(stts) details:")
-        dprint(stts)
+        # print("\nSample to Time-Table Samples(stts) details:")
+        # dprint(stts)
         pointer += 48
         return pointer
         # we done with stts
@@ -484,8 +484,8 @@ def sample_atom_classifier(atom, pointer, size):
         for f in range(flag_pointer, pointer):
             tempo += data[f]
         stss['Sync-sample-table'] = tempo
-        print("\nSample to Sync Samples(stss) details:")
-        dprint(stss)
+        # print("\nSample to Sync Samples(stss) details:")
+        # dprint(stss)
         # moov_pointer+=40
         return pointer
         # done with stss
@@ -525,8 +525,8 @@ def sample_atom_classifier(atom, pointer, size):
         # stsc['Sample-to-Chunk_Table'] = tempo
         # moov_pointer=moov_pointer+stsc['Size']
 
-        print("\nSample to sample chunk(stsc) atom details:")
-        dprint(stsc)
+        # print("\nSample to sample chunk(stsc) atom details:")
+        # dprint(stsc)
         return pointer
         # stsc atom complete
     if (atom == 'stsz'):
@@ -554,8 +554,8 @@ def sample_atom_classifier(atom, pointer, size):
         for f in range(flag_pointer, pointer):
             tempo += data[f]
         stsz['Sample-to-Size_Table'] = tempo
-        print("\nSample to Size Table(stsz) atom details:")
-        dprint(stsz)
+        # print("\nSample to Size Table(stsz) atom details:")
+        # dprint(stsz)
         return pointer
         # done with stsz atom
     if (atom == 'stco'):
@@ -579,8 +579,8 @@ def sample_atom_classifier(atom, pointer, size):
         for f in range(flag_pointer, pointer):
             tempo += data[f]
         stco['Chunk_offset_table'] = tempo
-        print("\n Chunk offset (stco) atom  details:")
-        dprint(stco)
+        # print("\n Chunk offset (stco) atom  details:")
+        # dprint(stco)
         return pointer
         # done with stco
     if (atom == 'ctts'):
@@ -604,8 +604,8 @@ def sample_atom_classifier(atom, pointer, size):
         for f in range(flag_pointer, pointer):
             tempo += data[f]
         ctts['Composition-offset-table'] = tempo
-        print("\nComposition offset Table (ctts) details:")
-        dprint(ctts)
+        # print("\nComposition offset Table (ctts) details:")
+        # dprint(ctts)
         return pointer
 
     if (atom == 'sdtp'):
@@ -625,8 +625,8 @@ def sample_atom_classifier(atom, pointer, size):
         for f in range(flag_pointer, pointer):
             tempo += data[f]
         sdtp['Sample-Dependency-Flags-Table'] = tempo
-        print("\n'Sample Dependency Flag Atom (sdtp) details:")
-        dprint(sdtp)
+        # print("\n'Sample Dependency Flag Atom (sdtp) details:")
+        # dprint(sdtp)
         return pointer
     if (atom == 'stps'):
         cur_pointer = pointer
@@ -649,8 +649,8 @@ def sample_atom_classifier(atom, pointer, size):
         for f in range(flag_pointer, pointer):
             tempo += data[f]
         stps['Partial-Sync-Sample-Table'] = tempo
-        print("\nPartial Sync Sample (stps) atom details:")
-        dprint(stps)
+        # print("\nPartial Sync Sample (stps) atom details:")
+        # dprint(stps)
         return pointer
     if (atom == 'cslg'):
         cur_pointer = pointer
@@ -679,8 +679,8 @@ def sample_atom_classifier(atom, pointer, size):
         for j in range(pointer+48, pointer+56):
             tempo += data[j]
         stps['DispalyEndTime'] = tempo
-        print("\ncomposition shift least greatest atom (cslg) atom details:")
-        dprint(cslg)
+        # print("\ncomposition shift least greatest atom (cslg) atom details:")
+        # dprint(cslg)
         return pointer
     
 
