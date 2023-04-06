@@ -1,6 +1,6 @@
 from HexData import data
 from SupportFunctions import litEnd, bigEnd, hex_to_ascii, dprint
-from AtomDictionaries import ftyp, free, mdat, moov, mvhd, trak, tkhd, mdia, mdhd, hdlr, minf, smhd, vmhd, dinf, dref, url, stbl, stsd, stts, stss, stsc, stsz, stco, ctts, sdtp, stps, cslg, udta
+from AtomDictionaries import ftyp, free, mdat, moov, mvhd, trak, tkhd, mdia, mdhd, hdlr, minf, smhd, vmhd, dinf, dref, url, stbl, stsd, stts, stss, stsc, stsz, stco, ctts, sdtp, stps, cslg, udta, sgpd, sbgp, elst, iods
 def ftyp_classifier(pointer, size):
     tempo = ""
     for i in range(pointer, pointer+8):
@@ -382,6 +382,7 @@ def dref_classifier(pointer, size):
     return pointer
 
 
+
 def sample_atom_classifier(atom, pointer, size):
     cur_size = size
     if (atom == 'stsd'):
@@ -434,6 +435,7 @@ def sample_atom_classifier(atom, pointer, size):
         # print("\nSample Table Description(stsd) details:")
         # dprint(stsd)
         return pointer
+    
     if (atom == 'stts'):
         stts['Size'] = cur_size
         tempo = ""
@@ -461,6 +463,7 @@ def sample_atom_classifier(atom, pointer, size):
         pointer += 48
         return pointer
         # we done with stts
+
     if (atom == 'stss'):
         stss['Size'] = cur_size
         tempo = ""
@@ -489,6 +492,7 @@ def sample_atom_classifier(atom, pointer, size):
         # moov_pointer+=40
         return pointer
         # done with stss
+
     if (atom == 'stsc'):
         cur_pointer = pointer
         stsc['Size'] = cur_size
@@ -529,6 +533,7 @@ def sample_atom_classifier(atom, pointer, size):
         # dprint(stsc)
         return pointer
         # stsc atom complete
+
     if (atom == 'stsz'):
         cur_pointer = pointer
         stsz['Size'] = cur_size
@@ -558,6 +563,7 @@ def sample_atom_classifier(atom, pointer, size):
         # dprint(stsz)
         return pointer
         # done with stsz atom
+
     if (atom == 'stco'):
         cur_pointer = pointer
         stco['Size'] = cur_size
@@ -583,6 +589,7 @@ def sample_atom_classifier(atom, pointer, size):
         # dprint(stco)
         return pointer
         # done with stco
+
     if (atom == 'ctts'):
         cur_pointer = pointer
         ctts['Size'] = cur_size
@@ -628,6 +635,7 @@ def sample_atom_classifier(atom, pointer, size):
         # print("\n'Sample Dependency Flag Atom (sdtp) details:")
         # dprint(sdtp)
         return pointer
+    
     if (atom == 'stps'):
         cur_pointer = pointer
         stps['Size'] = cur_size
@@ -652,6 +660,7 @@ def sample_atom_classifier(atom, pointer, size):
         # print("\nPartial Sync Sample (stps) atom details:")
         # dprint(stps)
         return pointer
+    
     if (atom == 'cslg'):
         cur_pointer = pointer
         cslg['Size'] = cur_size
@@ -683,6 +692,60 @@ def sample_atom_classifier(atom, pointer, size):
         # dprint(cslg)
         return pointer
     
+    if (atom == "sgpd"):
+        # def sgpd_classifier(atom,pointer,size):
+          cur_pointer=pointer
+          sgpd['Size'] = size
+          tempo=""
+          for j in range(pointer+16,pointer+18):
+            tempo+=data[j]
+          sgpd['Version'] = tempo
+          tempo=""
+          for j in range(pointer+18,pointer+24):
+            tempo+=data[j]
+          sgpd['Flags'] = tempo
+          tempo=""
+        #   grouping type is always 'Roll'
+          for j in range(pointer+32,pointer+40):
+            tempo+=data[j]
+          sgpd['DefaultLength'] = tempo
+          tempo=""
+          for j in range(pointer+40,pointer+48):
+            tempo+=data[j]
+          sgpd['EntryCount'] = tempo
+          tempo=""
+          flag_pointer = pointer+48
+          pointer = cur_pointer+(sgpd['Size']*2)
+          tempo = ""
+          for f in range(flag_pointer, pointer):
+             tempo += data[f]
+          sgpd['PayloadData'] = tempo
+          return pointer
+    
+    if (atom == "sbgp"):
+          cur_pointer=pointer
+          sbgp['Size'] = size
+          tempo=""
+          for j in range(pointer+16,pointer+18):
+            tempo+=data[j]
+          sbgp['Version'] = tempo
+          tempo=""
+          for j in range(pointer+18,pointer+24):
+            tempo+=data[j]
+          sbgp['Flags'] = tempo
+          tempo=""
+        #   grouping type is always 'Roll'
+          for j in range(pointer+32,pointer+40):
+            tempo+=data[j]
+          sbgp['EntryCount'] = tempo
+          flag_pointer = pointer+40
+          pointer = cur_pointer+(sbgp['Size']*2)
+          tempo = ""
+          for f in range(flag_pointer, pointer):
+             tempo += data[f]
+          sbgp['TableData'] = tempo
+          return pointer
+    
 
 def udta_classifier(atom,pointer,size):
           cur_pointer=pointer
@@ -700,6 +763,52 @@ def udta_classifier(atom,pointer,size):
           tempo=""
           for f in range(flag_pointer,pointer):
             tempo+=data[f]
-          udta['User_Data_List'] = tempo
+          udta['UserDataList'] = tempo
           return pointer
 
+def elst_classifier(atom,pointer,size):
+        elst['Size'] = size
+        tempo=""
+        for j in range(pointer+16,pointer+18):
+            tempo+=data[j]
+        elst['Version'] = tempo
+        tempo=""
+        for j in range(pointer+18,pointer+24):
+            tempo+=data[j]
+        elst['Flags'] = tempo
+        tempo=""
+        for j in range(pointer+24,pointer+32):
+            tempo+=data[j]
+        elst['EntryCount'] = tempo
+        tempo=""
+        for j in range(pointer+32,pointer+40):
+            tempo+=data[j]
+        elst['EditDuration'] = tempo
+        tempo=""
+        for j in range(pointer+40,pointer+48):
+            tempo+=data[j]
+        elst['EditMediaTime'] = tempo
+        tempo=""
+        for j in range(pointer+48,pointer+56):
+            tempo+=data[j]
+        elst['PlaybackSpeed'] = tempo
+        return pointer+56
+
+def iods_classifier(atom,pointer,size):
+        cur_pointer=pointer
+        iods['Size'] = size
+        tempo=""
+        for j in range(pointer+16,pointer+18):
+            tempo+=data[j]
+        iods['Version'] = tempo
+        tempo=""
+        for j in range(pointer+18,pointer+24):
+            tempo+=data[j]
+        iods['Flags'] = tempo
+        flag_pointer = pointer+24
+        pointer=cur_pointer+(iods['Size']*2)
+        tempo=""
+        for f in range(flag_pointer,pointer):
+          tempo+=data[f]
+        iods['OtherData'] = tempo
+        return pointer
