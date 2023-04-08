@@ -44,7 +44,6 @@ def mdat_classifier(pointer, size):
     for i in range(pointer, pointer+8):
         tempo += data[i]
     mdat['Size'] = size
-    print(size)
     pointer += size*2
     return pointer
 
@@ -100,9 +99,29 @@ def mvhd_classifier(pointer, size):
         tempo += data[j]
     mvhd['Matrix'] = tempo
     tempo = ""
-    for j in range(pointer+160, pointer+208):
+    for j in range(pointer+160, pointer+168):
         tempo += data[j]
-    mvhd['Predefines'] = tempo
+    mvhd['Preview_Time'] = tempo
+    tempo = ""
+    for j in range(pointer+168, pointer+176):
+        tempo += data[j]
+    mvhd['Preview_Duration'] = tempo
+    tempo = ""
+    for j in range(pointer+176, pointer+184):
+        tempo += data[j]
+    mvhd['Poster_Time'] = tempo
+    tempo = ""
+    for j in range(pointer+184, pointer+192):
+        tempo += data[j]
+    mvhd['Selection_Time'] = tempo
+    tempo = ""
+    for j in range(pointer+192, pointer+200):
+        tempo += data[j]
+    mvhd['Selection_Duration'] = tempo
+    tempo = ""
+    for j in range(pointer+200, pointer+208):
+        tempo += data[j]
+    mvhd['Current_Time'] = tempo
     tempo = ""
     for j in range(pointer+208, pointer+216):
         tempo += data[j]
@@ -359,12 +378,10 @@ def dref_classifier(pointer, size):
     count = 0
     # Write url atoms individaually to files so that all occurances of data references in the form of url atoms can be stored since lastest url atom is kept at the directionary
     while (count < entry_count):
-        print("uoo")
         # cur_atom="url"
         tempo = ""
         for j in range(pointer, pointer+8):
             tempo += data[j]
-        print(tempo)
         # break
         url['Size'] = bigEnd(tempo)
         tempo = ""
@@ -381,8 +398,6 @@ def dref_classifier(pointer, size):
     # dprint(url)
     return pointer
 
-
-
 def sample_atom_classifier(atom, pointer, size):
     cur_size = size
     if (atom == 'stsd'):
@@ -390,7 +405,111 @@ def sample_atom_classifier(atom, pointer, size):
         for j in range(pointer, pointer+8):
             tempo += data[j]
         stsd['Size'] = bigEnd(tempo)
-        print(bigEnd(tempo))
+        tempo = ""
+        for j in range(pointer+16, pointer+18):
+            tempo += data[j]
+        stsd['Version'] = tempo
+        tempo = ""
+        for j in range(pointer+18, pointer+24):
+            tempo += data[j]
+        stsd['Flags'] = tempo
+        tempo = ""
+        for j in range(pointer+24, pointer+32):
+            tempo += data[j]
+        stsd['Number_of_Entries'] = tempo
+        tempo = ""
+        for j in range(pointer+32, pointer+40):
+            tempo += data[j]
+        stsd['Sample_Description_Size'] = bigEnd(tempo)
+        tempo = ""
+        for j in range(pointer+40, pointer+48):
+            tempo += data[j]
+        stsd['Data_Format'] = hex_to_ascii(tempo)
+        tempo = ""
+        for j in range(pointer+48, pointer+52):
+            tempo += data[j]
+        stsd['version'] = bigEnd(tempo)
+        tempo = ""
+        for j in range(pointer+52, pointer+56):
+            tempo += data[j]
+        stsd['Revision_Level'] = bigEnd(tempo)
+        tempo = ""
+        for j in range(pointer+56, pointer+64):
+            tempo += data[j]
+        stsd['Vendor'] = bigEnd(tempo)
+        tempo = ""
+        for j in range(pointer+64, pointer+72):
+            tempo += data[j]
+        stsd['Temporal_Quality'] = bigEnd(tempo)
+        tempo = ""
+        for j in range(pointer+72, pointer+80):
+            tempo += data[j]
+        stsd['Spatial_Quality'] = bigEnd(tempo)
+        tempo = ""
+        for j in range(pointer+80, pointer+84):
+            tempo += data[j]
+        stsd['Media_Width'] = bigEnd(tempo)
+        tempo = ""
+        for j in range(pointer+84, pointer+88):
+            tempo += data[j]
+        stsd['Media_Height'] = bigEnd(tempo)
+        tempo = ""
+        for j in range(pointer+88, pointer+96):
+            tempo += data[j]
+        stsd['Horizontal_Resolution'] = bigEnd(tempo)
+        tempo = ""
+        for j in range(pointer+96, pointer+104):
+            tempo += data[j]
+        stsd['Vertical_Resolution'] = bigEnd(tempo)
+        tempo = ""
+        for j in range(pointer+104, pointer+112):
+            tempo += data[j]
+        stsd['DataSize'] = bigEnd(tempo)
+        tempo = ""
+        for j in range(pointer+112, pointer+116):
+            tempo += data[j]
+        stsd['Frame_Count'] = bigEnd(tempo)
+        tempo=""
+        t1=""
+        t1=t1+data[pointer+116]
+        t1=t1+data[pointer+117]
+        i=1
+        while(t1!='00'):
+            tempo=tempo+t1
+            t1=""
+            t1=t1+data[pointer+117+i]
+            t1=t1+data[pointer+117+i+1]
+            print(t1)
+            i=i+2
+        stsd['compressorname']=hex_to_ascii(tempo)
+        p=pointer+117+i
+        tempo = ""
+        for j in range(p, p+4):
+            tempo += data[j]
+        stsd['bits_per_sample'] = bigEnd(tempo)
+        tempo = ""
+        for j in range(p+4, p+8):
+            tempo += data[j]
+        stsd['channelcount'] = bigEnd(tempo)
+        tempo = ""
+        for j in range(p+8, p+12):
+            tempo += data[j]
+        stsd['samplesize'] = bigEnd(tempo)
+        tempo = ""
+        for j in range(p+12, p+20):
+            tempo += data[j]
+        stsd['samplerate'] = bigEnd(tempo)
+        tempo = ""
+        print(p+20)
+        for j in range(p+20, pointer+(stsd['Size']*2)):
+            tempo += data[j]
+        stsd['format_specific_data'] =(tempo)
+        return pointer+(stsd['Size']*2)
+    if (atom == 'stsdd'):
+        tempo = ""
+        for j in range(pointer, pointer+8):
+            tempo += data[j]
+        stsd['Size'] = bigEnd(tempo)
         tempo = ""
         for j in range(pointer+16, pointer+18):
             tempo += data[j]
@@ -509,7 +628,6 @@ def sample_atom_classifier(atom, pointer, size):
             tempo += data[j]
         stsc['Number_of_Entries'] = tempo
         flag_pointer = pointer+32
-        print(flag_pointer)
         pointer = cur_pointer+(stsc['Size']*2)
         # print("ziggaaaaa")
         # print(moov_pointer)

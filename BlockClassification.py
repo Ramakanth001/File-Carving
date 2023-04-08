@@ -107,5 +107,8 @@ def ClassifyBlock():
     print("\nSize of the file is : ", file_size, "bytes")
     print("Number of blocks in video :", block_count, "blocks")
 
+    
+    myf.close()
+    
     return file_size
 

@@ -32,9 +32,14 @@ mvhd = {
      'Preferred_Rate':None, # 4-bytes
      'Preferred_Volume':None, # 2-bytes
      'Reserved':None, # 10-bytes
-     'Matrix':None, # 36-bytes
-     'Predefines':None, # varaible (once check qtff)
-     'Next_Track_ID':None # 4-bytes
+     'Matrix':None, # 36-bytes  
+     'Preview_Time':None, # 4-bytes
+     'Preview_Duration':None, # 4-bytes
+     'Poster_Time':None, # 4-bytes
+     'Selection_Time':None, # 4-bytes
+     'Selection_Duration':None, # 4-bytes
+     'Current_Time':None, # 4-bytes
+     'Next_Track_ID':None # 4-bytes,
 }
 trak= {
     'Size':None, # 4-bytes
@@ -130,7 +135,7 @@ stbl = {
     'Size':None,# 4-bytes
      'Type':'stbl'# 4-bytes
 }
-stsd = {
+stsdd = {
     'Size':None,# 4-bytes
      'Type':'stsd',# 4-bytes
      'Version':None, # 1-byte
@@ -142,13 +147,39 @@ stsd = {
      'Data_Reference_Index':None,# 4-bytes
      'Predefines':None, # 6-bytes
      'Reserved2':None, # 6-bytes
-     'Media_Width':None, 
-     'Media_Height':None,
-     'Horizontal_Resolution':None,
-     'Vertical_Resolution':None,
-     'Reserved3':None,
-     'Frame_Count':None
+     'Media_Width':None, #2-bytes
+     'Media_Height':None, #2-bytes
+     'Horizontal_Resolution':None, #4-bytes
+     'Vertical_Resolution':None, #4-bytes
+     'Reserved3':None, #6-bytes
+     'Frame_Count':None #2-bytes
 
+}
+stsd = {
+    'Size':None,# 4-bytes
+     'Type':'stsd',# 4-bytes
+     'Version':None, # 1-byte
+     'Flags':None, # 3-bytes
+     'Number_of_Entries' : None,# 4-bytes 1 or 2 or 3
+     'Sample_Description_Size':None,# 4-bytes
+     'Data_Format':None, # 4-bytes
+     'version':None, #2-bytes
+     'Revision_Level':None, #2-bytes
+     'Vendor':None, #4-bytes
+     'Temporal_Quality':None,#4-bytes
+     'Spatial_Quality':None,#4-bytes
+     'Media_Width':None, #2-bytes
+     'Media_Height':None, #2-bytes
+     'Horizontal_Resolution':None, #4-bytes
+     'Vertical_Resolution':None, #4-bytes
+     'DataSize':None,#4-bytes
+     'Frame_Count':None, #2-bytes
+     'compressorname':None, #varying n char-n bytes+1
+     'bits_per_sample':None,#2-bytes
+     'channelcount':None,#2-bytes
+     'samplesize':None,#2-bytes
+     'samplerate':None,#4-bytes
+     'format_specific_data':None     
 }
 stts= {
     'Size':None,# 4-bytes
