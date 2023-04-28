@@ -15,10 +15,17 @@ x = {'ftyp': '(File type)', 'free': 'Free type', 'mdat': 'Media Data', 'moov': '
 l=[]
 missing_atoms={}
 track_counter=1
-
+thisfile=False
+import datetime
 def WriteToAFile(name="",d={},booll=False,listt=[],missing_atoms={}):
+    global thisfile
     global track_counter
-    myf = open('Stage-1\OutputSamples/output.txt', 'a')
+    if thisfile is False:
+        myf = open('Stage-1\OutputSamples/output.txt', 'w')
+        myf.write('Execution time:\n')
+        myf.write(str(datetime.datetime.now()))
+    else:
+        myf = open('Stage-1\OutputSamples/output.txt', 'a')
     if booll==False:
         if name=='udta':
             myf.write("\n"+"\nNext Up We Have User Data Atoms:\n")
@@ -52,6 +59,7 @@ def WriteToAFile(name="",d={},booll=False,listt=[],missing_atoms={}):
     myf.close()
 
 def MainAtomClassification():
+    global thisfile
     try:
         # file_size=ClassifyBlock()
         # file_size = os.path.getsize(r'Stage-3\\RedundancyPartialFileSamples\\CorruptedPartialFile1.txt')
@@ -70,6 +78,7 @@ def MainAtomClassification():
                 # dprint(d[cur_atom])
                 dprint(g)
                 WriteToAFile(name=cur_atom,d= d[cur_atom])
+                thisfile=True
             elif (cur_atom == "stbl"):
                 tempo = ""
                 for j in range(hex_pointer, hex_pointer+8):
@@ -78,6 +87,8 @@ def MainAtomClassification():
                 print("\nSample Table (stbl) details:-------------------------------------")
                 dprint(stbl)
                 WriteToAFile(name=cur_atom,d= d[cur_atom])
+                # global thisfile
+                thisfile=True
                 hex_pointer += 16
             elif (cur_atom == "edts"):
                 tempo = ""
@@ -97,6 +108,7 @@ def MainAtomClassification():
                 # dprint(d[cur_atom])
                 dprint(g)
                 WriteToAFile(name=cur_atom,d= d[cur_atom])
+                thisfile=True
             elif cur_atom == 'udta' or cur_atom == 'elst' or cur_atom == 'iods' :
                 hex_pointer,g = eval(
                     cur_atom+'_classifier')( hex_pointer, data,True)
@@ -104,6 +116,7 @@ def MainAtomClassification():
                 )+"("+x[cur_atom]+")"+" Atom Details are:-------------------------------------")
                 dprint(g)
                 WriteToAFile(name=cur_atom,d= d[cur_atom])
+                thisfile=True
             elif cur_atom in d.keys():
                     hex_pointer,g = eval(cur_atom+'_classifier')(hex_pointer,data,True)
                     if cur_atom!='dref':
@@ -111,6 +124,7 @@ def MainAtomClassification():
                         )+"("+x[cur_atom]+")"+" Atom Details are:-------------------------------------")
                         dprint(g)
                     WriteToAFile(name=cur_atom,d= d[cur_atom])
+                    thisfile=True
             else:
                 hex_pointer += cur_size*2
                 missing_atoms[cur_atom]=cur_size
