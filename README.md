@@ -56,10 +56,10 @@ Stage-2 deals with identification and classification of frames. In video, a fram
 3. Absolute Mean Difference Method (AMD)
 4. Root Mean Square Method (RMS)
 5. Background Frame Subtraction Method (BFSM)
-6. Custom Frame Detection Method (CFDM)
+6. Custom Frame Detection Method (CFDM) - (naive users))
 7. Optical Flow Frame Detection Method (OFFDM) -> Horn-Schunck Algorithm is used
  ```
- **NOTE: _(CFDM is adviced for a naive user)_**
+ **NOTE: _Difference between FIM and CFDM is that FIM logs every nth occurance while CFDM logs frames in such a way that the total number of frames are equal to the given number, covering the entire video_**
 
 ## STAGE-3 : 
 > **Partial-File-Carving**
